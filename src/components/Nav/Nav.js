@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react'
 import { apiAuth, apiHandleSignUpAndLogIn } from '../../api/api'
 import setAuthJWT from '../../api/setAuthJWT'
@@ -11,7 +10,7 @@ class Nav extends Component {
             email: '',
             password: '',
             isAuth: false,
-            loggedInEmail:'',
+            loggedInEmail: '',
             errorMessage: false,
             errorToggle: false
         }
@@ -19,22 +18,23 @@ class Nav extends Component {
 
     componentDidMount = () => {
         apiAuth()
-        .then(userObj =>{
-            this.setState({
-                isAuth: true,
-                loggedInEmail:userObj.email
-            }, ()=>{
-                this.props.appHandleAuthSubmit()
+            .then(userObj => {
+                this.setState({
+                    isAuth: true,
+                    loggedInEmail: userObj.email
+                }, () => {
+                    this.props.appHandleAuthSubmit()
+                })
             })
-        })
-        .catch(err => console.log(err))
+            .catch(err => console.log(err))
     }
 
-    handleInputOnChange = (event) => {// This line sets the value in the input box to the .name value of the corresponding user value that will be sent in the POST
+    handleInputOnChange = (event) => {
         this.setState({
             [event.target.name] : event.target.value
         })
     }
+
     handleInputOnSubmit = (event) => {
         event.preventDefault()
 
@@ -75,7 +75,6 @@ class Nav extends Component {
             setAuthJWT(null)
         })
     }
-
 
     render() {
         return (

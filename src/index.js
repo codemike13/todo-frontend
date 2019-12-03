@@ -5,7 +5,9 @@ import Nav from './components/Nav/Nav'
 import TodoList from './components/TodoList/TodoList'
 import {
     apiHandleAddNewTodoList,
-    apiHandleGetAllTodos
+    apiHandleGetAllTodos,
+    apiHandleNewEditTodobyID,
+    apiHandleDeleteTodo
 } from './api/api'
 
 class App extends Component {
@@ -34,7 +36,6 @@ class App extends Component {
     }
 
     appHandleAddNewTodoList = (newTodoFromTodoList) => {
-        console.log(newTodoFromTodoList);
 
         apiHandleAddNewTodoList(newTodoFromTodoList)
             .then(createdNewTodo => {
@@ -43,7 +44,6 @@ class App extends Component {
                     ['all']: [...todoLibrary.all, createdNewTodo]
                 }
                 ), () => {
-                    console.log('[index.js] ');
 
                 })
             })
@@ -68,6 +68,38 @@ class App extends Component {
             })
             .catch(error => console.log('error: ', error))
     }
+
+    appHandleNewEditTodoByID = (id, newTodo) => {
+        apiHandleNewEditTodobyID(id, newTodo)
+            .then(updatedTodo => {
+                // console.log(`[index.js] appHandleNewEditTodoByID Todo ID: ${id} , Updated todo: ${newTodo}`);
+                const newLib = this.state.todoLibrary['all'].map(item => {
+                    if (item._id === id) item.todo = updatedTodo.todo
+                    return item
+                })
+                this.setState(({ todoLibrary }) => ({
+                    todoLibrary: {
+                        ...todoLibrary,
+                        ['all']: newLib
+                    }
+                }))
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+
+    appHandleDeleteTodo = (id) => {
+
+        apiHandleDeleteTodo(id)
+            .then(result =>
+                this.appHandleGetAllTodos())
+            .catch(err => {
+                console.log(err);
+            })
+        // console.log(`[index.js] from appHandleDeleteTodo id: ${id} Delete todo: `)
+    }
+
 
     render() {
         return (
@@ -94,6 +126,8 @@ class App extends Component {
                         <TodoList
                             appHandleAddNewTodoList={this.appHandleAddNewTodoList}
                             todoList={this.state.todoLibrary['all']}
+                            appHandleNewEditTodoByID={this.appHandleNewEditTodoByID}
+                            appHandleDeleteTodo={this.appHandleDeleteTodo}
                         />
                     </>
                 ) : (

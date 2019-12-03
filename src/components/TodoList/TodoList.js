@@ -7,6 +7,7 @@ export default class TodoList extends Component {
         newTodo: ''
     }
 
+
     handleNewTodoSubmit = (event) => {
         event.preventDefault()
         this.props.appHandleAddNewTodoList(this.state)
@@ -26,23 +27,36 @@ export default class TodoList extends Component {
         return this.props.todoList.map((item) => {
             return (
                 <Todo
-                    name={item.todo}
+                    key={item._id}
+                    id={item._id}
+                    item={item.todo}
+                    completed={item.completed}
+                    todoHandleNewEditTodoByID={this.props.appHandleNewEditTodoByID}
+                    todoHandleDeleteByID={this.props.appHandleDeleteTodo}
                 />
             )
         })
     }
+
+
 
     render() {
         return (
             <>
                 <form onSubmit={this.handleNewTodoSubmit}>
                     <input name='newTodo' value={this.newTodo} onChange={this.handleOnChange} />
-                    <button>Submit</button>
+                    <button >Submit</button>
                 </form>
-                <ul>
+                <ul style={styles.listStyle}>
                     {this.props.todoList ? this.showTodoList() : null}
                 </ul>
             </>
         )
+    }
+}
+
+const styles = {
+    listStyle: {
+        listStyleType: 'none'
     }
 }
